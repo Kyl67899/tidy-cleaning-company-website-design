@@ -9,7 +9,8 @@
     "lint": "eslint",
     "updates": "npm i -g npm-check-updates && ncu -u && npm i && npm audit fix --force",
     "audit": "npm audit fix --force",
-    "clean": "rm -rf node_modules .next dist"
+    "clean": "rm -rf node_modules .next dist",
+    "ssl": "run: openssl rand -base64 32"
   },
   "dependencies": {
     "@ai-sdk/react": "^4.0.149",
