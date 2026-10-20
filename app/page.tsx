@@ -38,7 +38,12 @@ const services = [
   }
 ];
 
-const navItems = ["Services", "How it works", "About us", "FAQs"];
+const navItems = [
+  { label: "Services", href: "/services" },
+  { label: "How it works", href: "/how-it-works" },
+  { label: "About us", href: "/about-us" },
+  { label: "FAQs", href: "/faqs" },
+];
 
 export default function Page() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -58,11 +63,11 @@ export default function Page() {
           <nav className="hidden items-center gap-1 rounded-full border border-[#dfe5df] bg-white/80 p-1.5 shadow-sm md:flex" aria-label="Main navigation">
             {navItems.map((item) => (
               <Link
-                key={item}
-                href={`#${item.toLowerCase().replaceAll(' ', '-')}`}
+                key={item.label}
+                href={item.href}
                 className="rounded-full px-4 py-2 text-sm text-[#51615a] transition hover:bg-[#edf3ec] hover:text-[#1f3b32]"
               >
-                {item}
+                {item.label}
               </Link>
             ))}
           </nav>
@@ -81,10 +86,10 @@ export default function Page() {
 
         {menuOpen && <nav className="mb-5 flex flex-col gap-1 rounded-2xl border border-[#dfe5df] bg-white p-3 md:hidden">
           {navItems.map((item) =>
-            <Link key={item} href={`#${item.toLowerCase().replaceAll(' ', '-')}`}
+            <Link key={item.label} href={item.href}
               onClick={() => setMenuOpen(false)}
               className="rounded-xl px-4 py-3 text-sm">
-              {item}
+              {item.label}
             </Link>
           )}
           <Link href="#book" className="mt-2 rounded-xl bg-[#1f3b32] px-4 py-3 text-center text-sm font-semibold text-white">
@@ -239,13 +244,13 @@ export default function Page() {
                   Explore
                 </p>
                 <div className="mt-4 flex flex-col gap-3 text-sm text-[#61736a]">
-                  <Link href="#services">
+                  <Link href="/services">
                     Services
                   </Link>
-                  <Link href="#how-it-works">
+                  <Link href="/how-it-works">
                     How it works
                   </Link>
-                  <Link href="#about-us">
+                  <Link href="/about-us">
                     About us
                   </Link>
                 </div>
@@ -278,8 +283,8 @@ export default function Page() {
               © 2026 Tidy Home. All rights reserved.
             </span>
             <span className="flex gap-5">
-              <Link href="#privacy">Privacy</Link>
-              <Link href="#terms">Terms</Link>
+              <Link href="/faqs">FAQs</Link>
+              <Link href="mailto:hello@tidyhome.co">Contact</Link>
             </span>
           </div>
         </footer>
