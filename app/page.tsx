@@ -15,6 +15,7 @@ import {
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react'
+import { BookingForm } from '@/components/booking-form'
 
 const services = [
   {
@@ -211,11 +212,9 @@ export default function Page() {
               starts here.
             </em>
           </h2>
-          <Link href="mailto:hello@tidyhome.co?subject=Free cleaning estimate" className="mt-9 inline-flex items-center rounded-full bg-[#e0a06a] px-7 py-4 text-sm font-semibold text-[#2e271e]">
-            Get your free estimate <ArrowRight size={16} className="ml-2" />
-          </Link>
+          <BookingForm />
           <p className="mt-4 text-xs text-[#81908a]">
-            No commitment, just a quick conversation.
+            No commitment, just a quick conversation. Your details are sent securely to our crew.
           </p>
         </section>
 
