@@ -6,8 +6,7 @@ export const metadata: Metadata = {
   title: 'Tidy Home | Thoughtful Home Cleaning',
   description: 'Reliable, thoughtful home cleaning that gives you back the good parts of your day.',
   icons: {
-    icon: '/icon.svg',
-    apple: '/apple-icon.png',
+    icon: '/icon.svg'
   },
 }
 
