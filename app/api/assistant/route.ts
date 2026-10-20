@@ -18,7 +18,7 @@ export async function POST(request: Request) {
 
     return result.toUIMessageStreamResponse()
   } catch (error) {
-    console.error("[v0] Assistant route error", error)
+    console.error("Assistant route error", error)
     return Response.json({ error: "The assistant is temporarily unavailable." }, { status: 500 })
   }
 }
