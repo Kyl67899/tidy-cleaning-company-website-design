@@ -1,7 +1,8 @@
 'use client'
 
 import { FormEvent, useState } from "react"
-import { ArrowRight, Check, LoaderCircle, MessageCircle } from "lucide-react"
+import { useChat } from "@ai-sdk/react"
+import { ArrowRight, Check, LoaderCircle, MessageCircle, Send } from "lucide-react"
 
 const initialForm = { name: "", email: "", phone: "", service: "Home cleaning", date: "", time: "", address: "", notes: "" }
 
@@ -9,6 +10,8 @@ export function BookingForm() {
   const [form, setForm] = useState(initialForm)
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle")
   const [assistant, setAssistant] = useState(false)
+  const [chatInput, setChatInput] = useState("")
+  const { messages, sendMessage, status: chatStatus } = useChat()
 
   function update(field: keyof typeof initialForm, value: string) {
     setForm((current) => ({ ...current, [field]: value }))
@@ -29,7 +32,18 @@ export function BookingForm() {
       ) : (
         <>
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start"><div><p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#789873]">Appointment request</p><h3 className="mt-2 text-2xl font-semibold tracking-[-0.04em] text-[#1f3b32]">Tell us where to show up.</h3></div><button type="button" onClick={() => setAssistant(!assistant)} className="inline-flex items-center gap-2 self-start rounded-full bg-[#edf3ec] px-4 py-2 text-xs font-semibold text-[#315847]"><MessageCircle size={15} /> {assistant ? "Assistant on" : "Ask the assistant"}</button></div>
-          {assistant && <div className="mt-5 rounded-2xl bg-[#f7ead9] p-4 text-sm leading-6 text-[#5f5042]">Hi, I can help you choose a service and time. Home cleaning is best for regular upkeep, deep cleaning is ideal for a reset, and move in / out is designed for transitions. Pick your preferred slot below and the crew will confirm availability.</div>}
+          {assistant && <div className="mt-5 rounded-2xl bg-[#f7ead9] p-4 text-sm leading-6 text-[#5f5042]">
+            <div className="max-h-48 space-y-3 overflow-y-auto">
+              {messages.length === 0 && <p>Hi, I can help you choose a service and time. Ask me anything about your clean.</p>}
+              {messages.map((message) => <div key={message.id} className={message.role === "user" ? "text-right" : "text-left"}><span className="inline-block max-w-[90%] rounded-xl bg-white/70 px-3 py-2">{message.parts.filter((part) => part.type === "text").map((part) => part.text).join("")}</span></div>)}
+              {chatStatus === "streaming" && <p className="text-xs text-[#806b5a]">Thinking...</p>}
+            </div>
+            <form onSubmit={(event) => { event.preventDefault(); if (!chatInput.trim()) return; void sendMessage({ text: chatInput }); setChatInput("") }} className="mt-3 flex gap-2">
+              <input value={chatInput} onChange={(event) => setChatInput(event.target.value)} placeholder="Ask about services..." aria-label="Ask the Tidy assistant" className="min-w-0 flex-1 rounded-xl border border-[#ead7c2] bg-white/70 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#d59a6a]" />
+              <button type="submit" aria-label="Send message" disabled={chatStatus === "submitted" || chatStatus === "streaming"} className="grid size-10 shrink-0 place-items-center rounded-xl bg-[#1f3b32] text-white disabled:opacity-50"><Send size={15} /></button>
+            </form>
+            <a href="https://www.buymeacoffee.com/" target="_blank" rel="noreferrer" className="mt-3 inline-block text-xs font-semibold text-[#7b604b] underline underline-offset-4">Support assistant maintenance</a>
+          </div>}
           <form onSubmit={submit} className="mt-7 grid gap-4 sm:grid-cols-2">
             <label className="text-sm font-medium text-[#46574f]">Name<input required value={form.name} onChange={(e) => update("name", e.target.value)} className="mt-2 w-full rounded-2xl border border-[#dfe7dd] bg-[#fbfaf7] px-4 py-3 outline-none ring-[#9cbd8f] focus:ring-2" placeholder="Your name" /></label>
             <label className="text-sm font-medium text-[#46574f]">Email<input required type="email" value={form.email} onChange={(e) => update("email", e.target.value)} className="mt-2 w-full rounded-2xl border border-[#dfe7dd] bg-[#fbfaf7] px-4 py-3 outline-none ring-[#9cbd8f] focus:ring-2" placeholder="you@example.com" /></label>
